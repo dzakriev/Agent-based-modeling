@@ -1,3 +1,5 @@
+package application.agent;
+
 import java.util.Random;
 
 import static java.lang.StrictMath.abs;

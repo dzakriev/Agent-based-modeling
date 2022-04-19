@@ -1,3 +1,7 @@
+package application.agent;
+
+import application.Main;
+
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtils;
 import org.jfree.chart.JFreeChart;
@@ -13,9 +17,9 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
-import javax.swing.JFrame;
 
-public class GUI extends JFrame implements ActionListener {
+
+public class AgentBased extends JPanel implements ActionListener {
     private JButton button1 = new JButton("Create");
     private JTextField input = new JTextField("100",5);
     private JComboBox comboBox1;
@@ -27,6 +31,7 @@ public class GUI extends JFrame implements ActionListener {
     private BufferedImage graph;
     private Color activeColor = Color.GREEN;
     private Color inactiveColor = Color.RED;
+
     private static Agent[] initializeAgents() { //Метод для вызова одного конструктора через другой
         Agent[] agents = new Agent[10];
         for (int i = 0; i < 10; i++){
@@ -34,15 +39,10 @@ public class GUI extends JFrame implements ActionListener {
         }
         return agents;
     }
-    public GUI(Agent[] agents) throws IOException { //Конструктор
-        super("Agent population");
 
+    public AgentBased(Agent[] agents) throws IOException { //Конструктор
         agentsCount = getText();
         this.agents = agents;
-
-        this.setSize(600, 600);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
         String[] items = {
                 "Green",
                 "Red",
@@ -61,9 +61,8 @@ public class GUI extends JFrame implements ActionListener {
 
         input.setMaximumSize(new Dimension(50, 26));
 
-        Container container = this.getContentPane();
-        GroupLayout layout = new GroupLayout(getContentPane());
-        container.setLayout(layout);
+        GroupLayout layout = new GroupLayout(this);
+        this.setLayout(layout);
         layout.setAutoCreateGaps(true);
         layout.setAutoCreateContainerGaps(true);
         layout.setHorizontalGroup
@@ -85,8 +84,6 @@ public class GUI extends JFrame implements ActionListener {
                                 .addComponent(input)
                                 .addComponent(comboBox2))
                 );
-
-        pack();
     }
 
     private void setVisible(){
@@ -96,7 +93,7 @@ public class GUI extends JFrame implements ActionListener {
         input.setVisible(true);
     }
 
-    public GUI() throws IOException {
+    public AgentBased() throws IOException {
         this((initializeAgents()));
     }
 
