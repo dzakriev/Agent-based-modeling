@@ -1,33 +1,50 @@
 package application.agent;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import static java.lang.StrictMath.abs;
 
 public class Agent {
+    private static List<Agent> connections = new ArrayList();
+    public Agent next = null;
     int x;
     int y;
     int daysLeft;
     Random rand = new Random();
-    boolean isUser = false;
-    public Agent(){
-        x = rand.nextInt()%256;
-        y = rand.nextInt()%256;
-        int daysLeft = 0;
-        boolean isUser = false;
+    boolean isUser;
+
+    public Agent() {
+        x = rand.nextInt() % 256;
+        y = rand.nextInt() % 256;
+        daysLeft = 0;
+        isUser = false;
+        connections.add(this);
     }
-    public void setUser(boolean isUser){
-        this.isUser = isUser;
-        int daysLeft = rand.nextInt();
+
+    public static void clearConnection() {
+        connections.clear();
     }
+
+    public void setUser() {
+        isUser = true;
+        daysLeft = abs(rand.nextInt()) % 5 + 1;
+    }
+
     public void update() {
         if (isUser)
-            if (daysLeft != 0)
+            if (daysLeft != 0) {
+                if (abs(rand.nextInt()) % 100 == 1) {
+                    int r = abs(rand.nextInt());
+                    if (!connections.get(r % connections.size()).isUser) {
+                        connections.get(r % connections.size()).setUser();
+                    }
+                }
                 daysLeft--;
-            else isUser = false;
-        else if (abs(rand.nextInt())%100<10){
-            isUser = true;
-            daysLeft = rand.nextInt()%5+1;
+            } else isUser = false;
+        else if (abs(rand.nextInt()) % 100 < 10) {
+            setUser();
         }
     }
 }

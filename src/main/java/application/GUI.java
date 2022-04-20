@@ -7,7 +7,7 @@ import javax.swing.JFrame;
 
 public class GUI extends JFrame {
     public GUI(AgentBased agentBased) {
-
+        this.setTitle("Application");
         JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.addTab("Agent Based", null, agentBased,
                 "Models agent based system");
@@ -15,7 +15,6 @@ public class GUI extends JFrame {
         frame.add(tabbedPane);
         frame.setVisible(true);
         frame.pack();
-        //frame.setSize(1800, 800);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 }
