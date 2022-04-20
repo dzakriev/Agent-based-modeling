@@ -45,14 +45,14 @@ public class AgentBased extends JPanel implements ActionListener {
     private Color inactiveColor = Color.RED;
 
     public AgentBased(Agent[] agents) throws IOException { //Конструктор
-        String[] items = {
+        String[] colors = {
                 "Green",
                 "Red",
                 "Yellow",
                 "Blue"
         };
-        comboBox1 = new JComboBox(items);
-        comboBox2 = new JComboBox(items);
+        comboBox1 = new JComboBox(colors);
+        comboBox2 = new JComboBox(colors);
         comboBox2.setSelectedIndex(1);
         comboBox1.setMaximumSize(new Dimension(70, 20));
         comboBox2.setMaximumSize(new Dimension(70, 20));
@@ -248,7 +248,7 @@ public class AgentBased extends JPanel implements ActionListener {
             dataset.addValue(inactiveData[i], a2, i + 1 + "");
             dataset.addValue(activeData[i], a1, i + 1 + "");
         }
-        JFreeChart barChart = ChartFactory.createBarChart("Chart", "Days", "Count",
+        JFreeChart barChart = ChartFactory.createBarChart("Population", "Days", "Count",
                 dataset, PlotOrientation.VERTICAL, true, true, false);
         CategoryPlot plot = barChart.getCategoryPlot();
         plot.getRenderer().setSeriesPaint(0, inactiveColor);
