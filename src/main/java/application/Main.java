@@ -1,6 +1,5 @@
 package application;
 
-import application.agent.Agent;
 import application.agent.AgentBased;
 
 import java.io.IOException;
@@ -19,7 +18,7 @@ public class Main {
 
 
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         GUI gui = new GUI(agentBased);
     }
 }

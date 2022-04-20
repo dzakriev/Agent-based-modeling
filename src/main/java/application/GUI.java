@@ -14,7 +14,8 @@ public class GUI extends JFrame {
         JFrame frame = new JFrame();
         frame.add(tabbedPane);
         frame.setVisible(true);
-        frame.setSize(1800, 800);
+        frame.pack();
+        //frame.setSize(1800, 800);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 }
