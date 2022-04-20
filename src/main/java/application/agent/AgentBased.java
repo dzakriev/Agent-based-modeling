@@ -1,7 +1,5 @@
 package application.agent;
 
-import application.Main;
-
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtils;
 import org.jfree.chart.JFreeChart;
@@ -86,19 +84,9 @@ public class AgentBased extends JPanel implements ActionListener {
                 );
     }
 
-    private void setVisible(){
-        comboBox1.setVisible(true);
-        comboBox2.setVisible(true);
-        button1.setVisible(true);
-        input.setVisible(true);
-    }
-
     public AgentBased() throws IOException {
         this((initializeAgents()));
     }
-
-
-
 
     public void paintComponent() {
         updateColors();
@@ -109,15 +97,13 @@ public class AgentBased extends JPanel implements ActionListener {
             else g.setColor(inactiveColor);
             g.fillOval(agent.x + 500, agent.y+350, 10, 10);
         }
-        makeChart();
         try {
             createChart();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        setVisible();
     }
-
+    /** Gets values from comboBoxes and sets them as colors for agents. */
     private void updateColors(){
         switch ((String) (Objects.requireNonNull(comboBox1.getSelectedItem()))) {
             case ("Red") -> activeColor = Color.RED;
@@ -132,27 +118,7 @@ public class AgentBased extends JPanel implements ActionListener {
             default -> inactiveColor = Color.RED;
         }
     }
-
-    public void makeChart(){
-        int[] xs = new int[10];
-        int[] ys1 = new int[10];
-        int[] ys2 = new int[10];
-        for (int i = 0; i < 10; i++) {
-            xs[i] = (i + 1) * 20 + 1000;
-            ys1[i] = (agentsCount - activeData[i]) * 100 / (agentsCount) + 50;
-            ys2[i] = (agentsCount - inactiveData[i]) * 100 / (agentsCount) + 50;
-        }
-        Graphics g = getGraphics();
-        g.setColor(Color.white);
-        g.fillRect( 1020, 50, 181, 101);
-        g.setColor(Color.black);
-        g.drawLine(1020, 151, 1020, 50);
-        g.drawLine(1020, 151, 1200, 151);
-        g.setColor(inactiveColor);
-        g.drawPolyline(xs, ys2, 10);
-        g.setColor(activeColor);
-        g.drawPolyline(xs, ys1, 10);
-    }
+    /** Creates a barChart using JFreeChart library. */
     public void createChart() throws IOException {
         String a1 = "Active";
         String a2 = "Inactive";
@@ -170,19 +136,18 @@ public class AgentBased extends JPanel implements ActionListener {
         ChartUtils.saveChartAsPNG(new File("D://icon.png"), barChart, 650, 400);
         Graphics g = getGraphics();
         graph = ImageIO.read(new File("D://icon.png"));
-        g.drawImage(graph, 1000, 200, this);
+        g.drawImage(graph, 1000, 100, this);
     }
+    /** Clears area in agents habitat by drawing a white rectangle. */
     public void clear() {
         Graphics g = getGraphics();
         g.setColor(Color.white);
         g.fillRect( 200, 50, 600, 600);
     }
-
     public void setData(int[] activeData, int[] inactiveData) {
         this.activeData = activeData;
         this.inactiveData = inactiveData;
     }
-
     public int getText(){ //Возвращает значение из текстового окошка
         return Integer.parseInt(input.getText());
     }
@@ -207,11 +172,38 @@ public class AgentBased extends JPanel implements ActionListener {
         }
         return i;
     }
+    /** Makes 10 iterations in the model, sets data as. */
+    public void cycle(){
+        int n = getText();
+        int[] active_data = new int [10];
+        int[] inactive_data = new int [10];
+        for(int j = 0; j <10; j++) {
+            active_data[j] =  getActiveAgents();
+            inactive_data[j] = getInactiveAgents();
+            for (int i = 0; i < n; i++) {
+                getAgents()[i].update();
+            }
+        }
+        setData(active_data, inactive_data);
+    }
+    /** Creates agents population. */
+    public Agent[] create(int n){
+        Agent[] agents = new Agent[n];
+        for (int i = 0; i < n; i++){
+            agents[i] = new Agent();
+        }
+        clear();
+        setAgents(agents);
+        cycle();
+        paintComponent();
+        setVisible(true);
+        return agents;
+    }
     @Override
     public void actionPerformed(ActionEvent e) {
         if ("Create".equals(e.getActionCommand())){
             int agentsCount = Integer.parseInt(input.getText());
-            Main.create(agentsCount);
+            create(agentsCount);
         }
     }
 }
