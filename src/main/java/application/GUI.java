@@ -1,15 +1,15 @@
 package application;
 
-import application.agent.AgentBased;
+import application.agent.AgentBasedPanel;
 import application.simulation.DynamicSimulation;
 import javax.swing.*;
 import javax.swing.JFrame;
 
 public class GUI extends JFrame {
-    public GUI(AgentBased agentBased, DynamicSimulation dynamicSimulation) {
+    public GUI(AgentBasedPanel agentBasedPanel, DynamicSimulation dynamicSimulation) {
         this.setTitle("Application");
         JTabbedPane tabbedPane = new JTabbedPane();
-        tabbedPane.addTab("Agent Based", null, agentBased,
+        tabbedPane.addTab("Agent Based", null, agentBasedPanel,
                 "Models agent based system");
         tabbedPane.addTab("Dynamic Simulation", null, dynamicSimulation,
                 "Models dynamic simulation system");

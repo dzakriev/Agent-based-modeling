@@ -1,22 +1,23 @@
 package application;
 
-import application.agent.AgentBased;
+import application.agent.AgentBasedPanel;
 import application.simulation.DynamicSimulation;
 
 import java.io.IOException;
 
 public class Main {
-    private static AgentBased agentBased;
-    private static DynamicSimulation dynamicSimulation = new DynamicSimulation();
+    private static AgentBasedPanel agentBasedPanel;
+    private static DynamicSimulation dynamicSimulation;
     static {
+            dynamicSimulation = new DynamicSimulation();
         try {
-            agentBased = new AgentBased();
+            agentBasedPanel = new AgentBasedPanel();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public static void main(String[] args) {
-        GUI gui = new GUI(agentBased, dynamicSimulation);
+        GUI gui = new GUI(agentBasedPanel, dynamicSimulation);
     }
 }
