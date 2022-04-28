@@ -14,61 +14,72 @@ public class DynamicModel {
     private int averageIllnessDuration;
     private int[][] history;
     private int historyLength;
+
     public int getPopulationCount() {
         return populationCount;
     }
+
     public int getHealthyCount() {
         return healthyCount;
     }
+
     public int getLatentCount() {
         return latentCount;
     }
+
     public int getSickCount() {
         return sickCount;
     }
+
     public int getRecoveredCount() {
         return recoveredCount;
     }
+
     public double getInfectious() {
         return infectious;
     }
+
     public double getContactRateInfectious() {
         return contactRateInfectious;
     }
+
     public int getAverageIncubationTime() {
         return averageIncubationTime;
     }
+
     public int getAverageIllnessDuration() {
         return averageIllnessDuration;
     }
-    public int getHistoryLength(){
+
+    public int getHistoryLength() {
         return historyLength;
     }
-    public int[][] getHistory(){
+
+    public int[][] getHistory() {
         return history;
     }
 
-    public DynamicModel(int populationCount){
+    public DynamicModel(int populationCount, double infectious, double contactRateInfectious, int averageIncubationTime, int averageIllnessDuration) {
         this.populationCount = populationCount;
         healthyCount = populationCount - 1;
         latentCount = 0;
         sickCount = 1;
         recoveredCount = 0;
-        infectious = 0.6;
-        contactRateInfectious = 1.25;
-        averageIncubationTime = 10;
-        averageIllnessDuration = 15;
+        this.infectious = infectious;
+        this.contactRateInfectious = contactRateInfectious;
+        this.averageIncubationTime = averageIncubationTime;
+        this.averageIllnessDuration = averageIllnessDuration;
         history = new int[100000][];
-        for (int i = 0; i < 100000; i++){
+        for (int i = 0; i < 100000; i++) {
             history[i] = new int[4];
         }
         historyLength = 0;
     }
 
-    public void Tick(){
+    private void Tick() {
         int temp;
 
-        temp = (int) ceil( (float) latentCount/averageIncubationTime);
+        temp = (int) ceil((float) latentCount / averageIncubationTime);
         if (latentCount >= temp) {
             latentCount -= temp;
             sickCount += temp;
@@ -77,7 +88,7 @@ public class DynamicModel {
             latentCount = 0;
         }
 
-        temp = (int) ceil( (float) sickCount*contactRateInfectious*infectious*healthyCount/populationCount);
+        temp = (int) ceil((float) sickCount * contactRateInfectious * infectious * healthyCount / populationCount);
         if (healthyCount >= temp) {
             healthyCount -= temp;
             latentCount += temp;
@@ -97,7 +108,7 @@ public class DynamicModel {
         }
     }
 
-    public void Cycle(){
+    public void Cycle() {
         int i = 0;
         history[i][0] = healthyCount;
         history[i][1] = latentCount;
@@ -112,12 +123,17 @@ public class DynamicModel {
             history[i][3] = recoveredCount;
             i++;
         }
-        historyLength = i-1;
-        for (int j = 0; j < i; j++){
-            for (int z = 0; z < 4; z++){
-                System.out.print(history[j][z] + " ");
+        historyLength = i - 1;
+    }
+
+    public String toString() {
+        StringBuilder str = new StringBuilder("Healthy Latent Sick Recovered\n");
+        for (int i = 0; i < historyLength; i++) {
+            for (int j = 0; j < 4; j++){
+                str.append(history[i][j] + " ");
             }
-            System.out.println();
+            str.append("\n");
         }
+        return str.toString();
     }
 }
