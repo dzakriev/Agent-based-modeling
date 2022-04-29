@@ -12,7 +12,7 @@ public class Agent {
     int x;
     int y;
     int daysLeft;
-    Random rand = new Random();
+    private final Random rand = new Random();
     boolean isUser;
 
     public Agent() {

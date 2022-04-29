@@ -1,15 +1,23 @@
 package application;
 
 import application.agent.AgentBasedPanel;
-import application.simulation.DynamicSimulation;
+import application.eventdriven.EventDrivenPanel;
+import application.eventdriven.EventModel;
+import application.simulation.DynamicSimulationPanel;
 
 import java.io.IOException;
 
 public class Main {
     private static AgentBasedPanel agentBasedPanel;
-    private static DynamicSimulation dynamicSimulation;
+    private static DynamicSimulationPanel dynamicSimulationPanel;
+    private static EventDrivenPanel eventDrivenPanel;
     static {
-            dynamicSimulation = new DynamicSimulation();
+        try {
+            eventDrivenPanel = new EventDrivenPanel();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        dynamicSimulationPanel = new DynamicSimulationPanel();
         try {
             agentBasedPanel = new AgentBasedPanel();
         } catch (IOException e) {
@@ -18,6 +26,8 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        GUI gui = new GUI(agentBasedPanel, dynamicSimulation);
+        GUI gui = new GUI(agentBasedPanel, dynamicSimulationPanel, eventDrivenPanel);
+        EventModel model = new EventModel();
+        System.out.println(model.Cycle(5));
     }
 }
