@@ -6,12 +6,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 
-public class EventDrivenPanel extends JPanel implements ActionListener, Runnable{
-    private JButton startButton;
-    private JButton stopButton;
-    private JLabel canvas;
+public class EventDrivenPanel extends JPanel implements ActionListener, Runnable {
+    private final JButton startButton;
+    private final JButton stopButton;
+    private final JLabel canvas;
     private EventModel model;
-    private JTextField iterations;
+    private final JTextField iterations;
+    private Thread thread = new Thread(this);
 
     //Integer.parseInt(iterations.getText())
     public EventDrivenPanel() throws InterruptedException {
@@ -59,7 +60,6 @@ public class EventDrivenPanel extends JPanel implements ActionListener, Runnable
         String[] commands = input.split("\n");
         BufferedImage image;
         Graphics g;
-        Graphics gg = getGraphics();
         for (int i = 0; i < commands.length; i++) {
             switch (commands[i]) {
                 case "toLeft":
@@ -67,14 +67,13 @@ public class EventDrivenPanel extends JPanel implements ActionListener, Runnable
                         image = drawBlank();
                         g = image.getGraphics();
                         g.setColor(Color.ORANGE);
-                        g.fillRect(image.getWidth()*4/6 - j * image.getWidth()/6, image.getHeight()*2/5+10, image.getWidth()/6, 10);
+                        g.fillRect(image.getWidth() * 4 / 6 - j * image.getWidth() / 6, image.getHeight() * 2 / 5 + 10, image.getWidth() / 6, 10);
 
                         g.setColor(Color.GREEN);
                         for (int z = 0; z < model.getHistory().get(i); z++) {
-                            g.fillOval(image.getWidth()*4/6 - j * image.getWidth()/6 + (z+1) * 25, image.getHeight()*2/5, 10, 10);
+                            g.fillOval(image.getWidth() * 4 / 6 - j * image.getWidth() / 6 + (z + 1) * 25, image.getHeight() * 2 / 5, 10, 10);
                         }
                         canvas.setIcon(new ImageIcon(image));
-                        paint(gg);
                         Thread.sleep(1000);
                     }
                     break;
@@ -84,14 +83,13 @@ public class EventDrivenPanel extends JPanel implements ActionListener, Runnable
                         image = drawBlank();
                         g = image.getGraphics();
                         g.setColor(Color.ORANGE);
-                        g.fillRect(image.getWidth()/6 + j * image.getWidth()/6, image.getHeight()*2/5+10, image.getWidth()/6, 10);
+                        g.fillRect(image.getWidth() / 6 + j * image.getWidth() / 6, image.getHeight() * 2 / 5 + 10, image.getWidth() / 6, 10);
 
                         g.setColor(Color.GREEN);
                         for (int z = 0; z < model.getHistory().get(i); z++) {
-                            g.fillOval(image.getWidth()/6 + j * image.getWidth()/6 + (z+1) * 25, image.getHeight()*2/5, 10, 10);
+                            g.fillOval(image.getWidth() / 6 + j * image.getWidth() / 6 + (z + 1) * 25, image.getHeight() * 2 / 5, 10, 10);
                         }
                         canvas.setIcon(new ImageIcon(image));
-                        paint(gg);
                         Thread.sleep(1000);
                     }
                     break;
@@ -100,22 +98,21 @@ public class EventDrivenPanel extends JPanel implements ActionListener, Runnable
                     image = drawBlank();
                     g = image.getGraphics();
                     g.setColor(Color.ORANGE);
-                    g.fillRect(image.getWidth()*4/6, image.getHeight()*2/5+10, image.getWidth()/6, 10);
+                    g.fillRect(image.getWidth() * 4 / 6, image.getHeight() * 2 / 5 + 10, image.getWidth() / 6, 10);
                     g.setColor(Color.GREEN);
-                    for (int z = 0; z <  model.getHistory().get(i); z++) {
-                        g.fillOval(image.getWidth()*5/6 + (z+1) * 25, image.getHeight()*2/5, 10, 10);
+                    for (int z = 0; z < model.getHistory().get(i); z++) {
+                        g.fillOval(image.getWidth() * 5 / 6 + (z + 1) * 25, image.getHeight() * 2 / 5, 10, 10);
                     }
 
                     canvas.setIcon(new ImageIcon(image));
-                    paint(gg);
                     Thread.sleep(1000);
 
                     image = drawBlank();
                     g = image.getGraphics();
                     g.setColor(Color.ORANGE);
-                    g.fillRect(image.getWidth()*4/6, image.getHeight()*2/5+10, image.getWidth()/6, 10);
+                    g.fillRect(image.getWidth() * 4 / 6, image.getHeight() * 2 / 5 + 10, image.getWidth() / 6, 10);
                     canvas.setIcon(new ImageIcon(image));
-                    paint(gg);
+                    canvas.setVisible(true);
                     Thread.sleep(1000);
                     break;
 
@@ -123,22 +120,20 @@ public class EventDrivenPanel extends JPanel implements ActionListener, Runnable
                     image = drawBlank();
                     g = image.getGraphics();
                     g.setColor(Color.ORANGE);
-                    g.fillRect(image.getWidth()/6, image.getHeight()*2/5+10, image.getWidth()/6, 10);
+                    g.fillRect(image.getWidth() / 6, image.getHeight() * 2 / 5 + 10, image.getWidth() / 6, 10);
                     g.setColor(Color.GREEN);
-                    for (int z = 0; z <  model.getHistory().get(i); z++) {
-                        g.fillOval(image.getWidth()/6 - (z+1) * 25, image.getHeight()*2/5, 10, 10);
+                    for (int z = 0; z < model.getHistory().get(i); z++) {
+                        g.fillOval(image.getWidth() / 6 - (z + 1) * 25, image.getHeight() * 2 / 5, 10, 10);
                     }
 
                     canvas.setIcon(new ImageIcon(image));
-                    paint(gg);
                     Thread.sleep(1000);
 
                     image = drawBlank();
                     g = image.getGraphics();
                     g.setColor(Color.ORANGE);
-                    g.fillRect(image.getWidth()/6, image.getHeight()*2/5+10, image.getWidth()/6, 10);
+                    g.fillRect(image.getWidth() / 6, image.getHeight() * 2 / 5 + 10, image.getWidth() / 6, 10);
                     canvas.setIcon(new ImageIcon(image));
-                    paint(gg);
                     Thread.sleep(1000);
                     break;
 
@@ -146,15 +141,14 @@ public class EventDrivenPanel extends JPanel implements ActionListener, Runnable
                     image = drawBlank();
                     g = image.getGraphics();
                     g.setColor(Color.ORANGE);
-                    g.fillRect(image.getWidth()*4/6, image.getHeight()*2/5+10, image.getWidth()/6, 10);
+                    g.fillRect(image.getWidth() * 4 / 6, image.getHeight() * 2 / 5 + 10, image.getWidth() / 6, 10);
 
                     g.setColor(Color.GREEN);
-                    for (int z = 0; z <  model.getHistory().get(i); z++) {
-                        g.fillOval(image.getWidth()*5/6 + (z+1) * 25, image.getHeight()*2/5, 10, 10);
+                    for (int z = 0; z < model.getHistory().get(i); z++) {
+                        g.fillOval(image.getWidth() * 5 / 6 + (z + 1) * 25, image.getHeight() * 2 / 5, 10, 10);
                     }
 
                     canvas.setIcon(new ImageIcon(image));
-                    paint(gg);
                     Thread.sleep(1000);
                     break;
 
@@ -162,15 +156,14 @@ public class EventDrivenPanel extends JPanel implements ActionListener, Runnable
                     image = drawBlank();
                     g = image.getGraphics();
                     g.setColor(Color.ORANGE);
-                    g.fillRect(image.getWidth()/6, image.getHeight()*2/5+10, image.getWidth()/6, 10);
+                    g.fillRect(image.getWidth() / 6, image.getHeight() * 2 / 5 + 10, image.getWidth() / 6, 10);
 
                     g.setColor(Color.GREEN);
-                    for (int z = 0; z <  model.getHistory().get(i); z++) {
-                    g.fillOval(image.getWidth()/6 - (z+1) * 25, image.getHeight()*2/5, 10, 10);
+                    for (int z = 0; z < model.getHistory().get(i); z++) {
+                        g.fillOval(image.getWidth() / 6 - (z + 1) * 25, image.getHeight() * 2 / 5, 10, 10);
                     }
 
                     canvas.setIcon(new ImageIcon(image));
-                    paint(gg);
                     Thread.sleep(1000);
                     break;
 
@@ -188,17 +181,17 @@ public class EventDrivenPanel extends JPanel implements ActionListener, Runnable
         g.setColor(Color.WHITE);
         g.fillRect(0, 0, image.getWidth(), image.getHeight());
         g.setColor(Color.BLACK);
-        g.fillRect(0, 95, image.getWidth()/6, image.getHeight()/2+5);
-        g.fillRect(image.getWidth()*5/6, 95, image.getWidth()/6, image.getHeight()/2+5);
+        g.fillRect(0, 95, image.getWidth() / 6, image.getHeight() / 2 + 5);
+        g.fillRect(image.getWidth() * 5 / 6, 95, image.getWidth() / 6, image.getHeight() / 2 + 5);
         g.setColor(Color.BLUE);
-        g.fillRect(image.getWidth()/6, 100, image.getWidth()*4/6, image.getHeight()/2);
+        g.fillRect(image.getWidth() / 6, 100, image.getWidth() * 4 / 6, image.getHeight() / 2);
         return image;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Thread thread = new Thread(this);
         if ("Start".equals(e.getActionCommand())) {
+            thread = new Thread(this);
             thread.start();
             startButton.setEnabled(false);
             stopButton.setEnabled(true);
@@ -207,6 +200,7 @@ public class EventDrivenPanel extends JPanel implements ActionListener, Runnable
             thread.interrupt();
             startButton.setEnabled(true);
             stopButton.setEnabled(false);
+            canvas.setIcon(new ImageIcon(drawBlank()));
         }
     }
 

@@ -12,21 +12,23 @@ public class EventModel {
     private final Random rand = new Random();
     private boolean isLeft;
     private int iterations;
-    private List<Integer> history;
+    private final List<Integer> history;
 
-    public int getRaftCount(){
+    public int getRaftCount() {
         return raftCount;
     }
+
     public String whereIsRaft() {
         if (isLeft) return ("left");
         else if (isRight) return ("right");
         else return ("sea");
     }
 
-    public List<Integer> getHistory(){
+    public List<Integer> getHistory() {
         return history;
     }
-    public EventModel(){
+
+    public EventModel() {
         leftCoastCount = 0;
         rightCoastCount = 0;
         raftCount = 0;
@@ -36,55 +38,55 @@ public class EventModel {
         history = new ArrayList<Integer>();
     }
 
-    public void toRight(){
+    public void toRight() {
         isLeft = false;
         isRight = true;
         history.add(raftCount);
         iterations++;
     }
 
-    public void toLeft(){
+    public void toLeft() {
         isLeft = true;
         isRight = false;
         history.add(raftCount);
         iterations++;
     }
 
-    public void addRight(){
+    public void addRight() {
         rightCoastCount += abs(rand.nextInt()) % 4 + 1;
         if (rightCoastCount > 4) rightCoastCount = 4;
         history.add(rightCoastCount);
     }
 
-    public void addLeft(){
+    public void addLeft() {
         leftCoastCount += abs(rand.nextInt()) % 4 + 1;
         if (leftCoastCount > 4) leftCoastCount = 4;
         history.add(leftCoastCount);
     }
 
-    public void exit(){
+    public void exit() {
         history.add(raftCount);
         raftCount = 0;
     }
 
-    public void onBoard(){
-        if (isRight){
+    public void onBoard() {
+        if (isRight) {
             raftCount = rightCoastCount;
             rightCoastCount = 0;
             history.add(rightCoastCount);
         }
-        if (isLeft){
+        if (isLeft) {
             raftCount = leftCoastCount;
             leftCoastCount = 0;
             history.add(leftCoastCount);
         }
     }
 
-    public String Cycle(int iterationsToDo){
+    public String Cycle(int iterationsToDo) {
         StringBuilder ret = new StringBuilder();
-        while(iterations < iterationsToDo){
+        while (iterations < iterationsToDo) {
             if (isRight) {
-                if (raftCount != 0){
+                if (raftCount != 0) {
                     exit();
                     ret.append("exitRight\n");
                 }
@@ -97,8 +99,8 @@ public class EventModel {
                 onBoard();
                 toLeft();
                 ret.append("onBoard\n").append("toLeft\n");
-            } else if (isLeft){
-                if (raftCount != 0){
+            } else if (isLeft) {
+                if (raftCount != 0) {
                     exit();
                     ret.append("exitLeft\n");
                 }

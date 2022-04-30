@@ -7,7 +7,7 @@ import java.util.Random;
 import static java.lang.StrictMath.abs;
 
 public class Agent {
-    private static List<Agent> connections = new ArrayList();
+    public static final List<Agent> connections = new ArrayList<Agent>();
     public Agent next = null;
     int x;
     int y;
@@ -33,7 +33,7 @@ public class Agent {
     }
 
     public void update() {
-        if (isUser)
+        if (isUser) {
             if (daysLeft != 0) {
                 if (abs(rand.nextInt()) % 100 == 1) {
                     int r = abs(rand.nextInt());
@@ -43,8 +43,17 @@ public class Agent {
                 }
                 daysLeft--;
             } else isUser = false;
-        else if (abs(rand.nextInt()) % 100 < 10) {
+        } else if (abs(rand.nextInt()) % 100 < 10) {
             setUser();
         }
+    }
+
+    public Agent copy(){
+        Agent temp_agent = new Agent();
+        temp_agent.x = x;
+        temp_agent.y = y;
+        temp_agent.isUser = isUser;
+        temp_agent.daysLeft = daysLeft;
+        return temp_agent;
     }
 }

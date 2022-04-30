@@ -1,50 +1,39 @@
 package application.agent;
 
 import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartUtils;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.util.Arrays;
 import java.util.Objects;
 
 
 public class AgentBasedPanel extends JPanel implements ActionListener {
-    private JButton button1;
-    private JButton[] buttons;
-    private JTextField input1;//Максимальная популяция - 10000
-    private JTextField input2; //Максимум итераций - 15
-    private JComboBox comboBox1;
-    private JComboBox comboBox2;
-    private JLabel habitatLabel = new JLabel("Habitat");
-    private JLabel input1Label = new JLabel("Population");
-    private JLabel input2Label = new JLabel("Iterations");
-    private JLabel comboBox1Label = new JLabel("Active");
-    private JLabel comboBox2Label = new JLabel("Inactive");
-    private JLabel habitatImg;
-    private JLabel graphImg;
+    private final JButton button1;
+    private final JButton[] buttons;
+    private final JTextField input1;//Максимальная популяция - 10000
+    private final JTextField input2; //Максимум итераций - 15
+    private final JComboBox comboBox1;
+    private final JComboBox comboBox2;
+    private final JLabel habitat;
+    private final JLabel graph;
     private Agent[] agents;
     private Agent[][] agentsHistory;
-    private BufferedImage graph;
-    private BufferedImage habitat;
     private int agentsCount;
-    private JPanel buttonsPanel;
     private int iterations;
     private int[] activeData;
     private int[] inactiveData;
     private Color activeColor = Color.GREEN;
     private Color inactiveColor = Color.RED;
 
-    public AgentBasedPanel(Agent[] agents) throws IOException { //Конструктор
+    public AgentBasedPanel(Agent[] agents) { //Конструктор
         String[] colors = {
                 "Green",
                 "Red",
@@ -61,8 +50,8 @@ public class AgentBasedPanel extends JPanel implements ActionListener {
         button1.addActionListener(this);
         button1.setMaximumSize(new Dimension(50, 26));
 
-        input1 = new JTextField("100", 5);
-        input2 = new JTextField("15", 5);
+        input1 = new JTextField("0", 5);
+        input2 = new JTextField("0", 5);
         input1.setMaximumSize(new Dimension(70, 26));
         input2.setMaximumSize(new Dimension(70, 26));
         input1.setMinimumSize(new Dimension(70, 26));
@@ -71,24 +60,27 @@ public class AgentBasedPanel extends JPanel implements ActionListener {
         this.agents = agents;
         agentsCount = getPopulation();
         iterations = getIterations();
-        agentsHistory = new Agent[15][10000];
-        for (int i = 1; i < iterations; i++) {
+        agentsHistory = new Agent[15][];
+        for (int i = 0; i < 15; i++) {
             agentsHistory[i] = new Agent[10000];
-            for (int j = 0; j < agentsCount; j++) {
+            for (int j = 0; j < 10000; j++) {
                 agentsHistory[i][j] = new Agent();
+                Agent.connections.remove(agentsHistory[i][j]);
             }
         }
+        for (int j = 0; j < agentsCount; j++) {
+            agentsHistory[0][j] = agents[j].copy();
+            Agent.connections.remove(agentsHistory[0][j]);
+        }
+        cycle();
 
-        graph = ImageIO.read(new File("blank.png"));
-        habitat = ImageIO.read(new File("habitat.png"));
-
-        graphImg = new JLabel();
-        graphImg.setIcon(new ImageIcon(graph));
-        habitatImg = new JLabel();
-        habitatImg.setIcon(new ImageIcon(habitat));
+        habitat = new JLabel();
+        habitat.setIcon(new ImageIcon(paintAgents(agents)));
+        graph = new JLabel();
+        graph.setIcon(new ImageIcon(createChart()));
 
         buttons = new JButton[15];
-        buttonsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT)); //Чтобы сделать кнопки по центру, необходимо убрать FlowLayout
+        JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT)); //Чтобы сделать кнопки по центру, необходимо убрать FlowLayout
         for (int i = 0; i < 15; i++) {
             buttons[i] = new JButton(i + 1 + "");
             buttonsPanel.add(buttons[i]);
@@ -96,11 +88,15 @@ public class AgentBasedPanel extends JPanel implements ActionListener {
             if (i > iterations - 1) buttons[i].setVisible(false);
         }
 
-
         GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
         layout.setAutoCreateGaps(true);
         layout.setAutoCreateContainerGaps(true);
+        JLabel comboBox2Label = new JLabel("Inactive");
+        JLabel comboBox1Label = new JLabel("Active");
+        JLabel input2Label = new JLabel("Iterations");
+        JLabel input1Label = new JLabel("Population");
+        JLabel habitatLabel = new JLabel("Habitat");
         layout.setHorizontalGroup
                 (layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup()
@@ -134,10 +130,10 @@ public class AgentBasedPanel extends JPanel implements ActionListener {
                                         .addGap(240)
                                         .addComponent(habitatLabel)
                                 )
-                                .addComponent(habitatImg)
+                                .addComponent(habitat)
                         )
                         .addGroup(layout.createParallelGroup()
-                                .addComponent(graphImg)
+                                .addComponent(graph)
                                 .addComponent(buttonsPanel)
                         )
 
@@ -168,25 +164,27 @@ public class AgentBasedPanel extends JPanel implements ActionListener {
                         )
                         .addGroup(layout.createSequentialGroup()
                                 .addComponent(habitatLabel)
-                                .addComponent(habitatImg)
+                                .addComponent(habitat)
                         )
                         .addGroup(layout.createSequentialGroup()
                                 .addGap(40)
-                                .addComponent(graphImg)
+                                .addComponent(graph)
                                 .addComponent(buttonsPanel)
                         )
                 );
+        input1.setText("100");
+        input2.setText("10");
     }
 
-    public AgentBasedPanel() throws IOException {
-        this((initializeAgents(10)));
+    public AgentBasedPanel() {
+        this((initializeAgents(0)));
     }
     /**
      * Static method for initializing object with no arguments.
      */
-    private static Agent[] initializeAgents(int agentsCount) { //Метод для вызова одного конструктора через другой
-        Agent[] agents = new Agent[agentsCount];
+    private static Agent[] initializeAgents(int agentsCount) {
         Agent.clearConnection();
+        Agent[] agents = new Agent[agentsCount];
         for (int i = 0; i < agentsCount; i++) {
             agents[i] = new Agent();
         }
@@ -194,11 +192,13 @@ public class AgentBasedPanel extends JPanel implements ActionListener {
     }
 
     /**
-     * Paints agents, updates JLabel responsible for habitat.
+     * Paints agents, updates JLabel displaying habitat.
      */
-    public void paintAgents(Agent[] agents) throws IOException {
-        habitat = ImageIO.read(new File("habitat.png"));
-        Graphics g = habitat.createGraphics();
+    private BufferedImage paintAgents(Agent[] agents) {
+        BufferedImage habitat = new BufferedImage(521, 521, 1);
+        Graphics g = habitat.getGraphics();
+        g.setColor(Color.WHITE);
+        g.fillRect(0,0,521,521);
         updateColors();
         for (int i = 0; i < agentsCount; i++) {
             if (agents[i].isUser) {
@@ -208,16 +208,12 @@ public class AgentBasedPanel extends JPanel implements ActionListener {
             }
             g.fillOval(agents[i].x + 256, agents[i].y + 256, 10, 10);
         }
-        habitatImg.setIcon(new ImageIcon(habitat));
+        return habitat;
     }
 
-    public void paintComponent() throws IOException {
-        paintAgents(agents);
-        try {
-            createChart();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void paintComponent() {
+        habitat.setIcon(new ImageIcon(paintAgents(agents)));
+        graph.setIcon(new ImageIcon(createChart()));
     }
 
     /**
@@ -241,7 +237,7 @@ public class AgentBasedPanel extends JPanel implements ActionListener {
     /**
      * Creates a barChart using JFreeChart library
      */
-    public BufferedImage createChart() throws IOException {
+    public BufferedImage createChart() {
         String a1 = "Active";
         String a2 = "Inactive";
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
@@ -254,10 +250,7 @@ public class AgentBasedPanel extends JPanel implements ActionListener {
         CategoryPlot plot = barChart.getCategoryPlot();
         plot.getRenderer().setSeriesPaint(0, inactiveColor);
         plot.getRenderer().setSeriesPaint(1, activeColor);
-        ChartUtils.saveChartAsPNG(new File("chart.png"), barChart, 650, 400);
-        graph = ImageIO.read(new File("chart.png"));
-        graphImg.setIcon(new ImageIcon(graph));
-        return graph;
+        return barChart.createBufferedImage(650, 400);
     }
 
     public void setData(int[] activeData, int[] inactiveData) {
@@ -270,7 +263,7 @@ public class AgentBasedPanel extends JPanel implements ActionListener {
             input1.setText("10000");
         }
         if (Integer.parseInt(input1.getText()) < 1) {
-            input1.setText("1");
+            input1.setText("0");
         }
         return Integer.parseInt(input1.getText());
     }
@@ -280,20 +273,12 @@ public class AgentBasedPanel extends JPanel implements ActionListener {
             input2.setText("15");
         }
         if (Integer.parseInt(input2.getText()) < 1) {
-            input2.setText("1");
+            input2.setText("0");
         }
         return Integer.parseInt(input2.getText());
     }
 
-    public Agent[] getAgents() {
-        return agents;
-    }
 
-    public void setAgents(Agent[] agents) {
-        this.agents = agents;
-        agentsCount = getPopulation();
-        iterations = getIterations();
-    }
 
     public int getActiveAgents() {
         int i = 0;
@@ -319,17 +304,15 @@ public class AgentBasedPanel extends JPanel implements ActionListener {
         int[] inactive_data = new int[iterations];
         for (int i = 0; i < iterations; i++) {
             for (int j = 0; j < agentsCount; j++) {
-                Agent temp_agent = new Agent();
-                temp_agent.x = agents[j].x;
-                temp_agent.y = agents[j].y;
-                temp_agent.isUser = agents[j].isUser;
-                temp_agent.daysLeft = agents[j].daysLeft;
-                agentsHistory[i][j] = temp_agent;
+                agentsHistory[i][j] = agents[j].copy();
+                Agent.connections.remove(agentsHistory[i][j]);
             }
             active_data[i] = getActiveAgents();
             inactive_data[i] = getInactiveAgents();
-            if (i != iterations - 1) for (int j = 0; j < agentsCount; j++) {
-                agents[j].update();
+            if (i != iterations - 1) {
+                for (int j = 0; j < agentsCount; j++) {
+                    agents[j].update();
+                }
             }
         }
         setData(active_data, inactive_data);
@@ -338,13 +321,12 @@ public class AgentBasedPanel extends JPanel implements ActionListener {
     /**
      * Creates agents population.
      */
-    public void create(int n) throws IOException {
-        Agent[] agents = new Agent[n];
+    public void create(int n) {
         Agent.clearConnection();
+        agents = new Agent[n];
         for (int i = 0; i < n; i++) {
             agents[i] = new Agent();
         }
-        setAgents(agents);
         cycle();
         paintComponent();
         for (int i = 0; i < 15; i++) {
@@ -358,19 +340,11 @@ public class AgentBasedPanel extends JPanel implements ActionListener {
         if ("Create".equals(e.getActionCommand())) {
             agentsCount = getPopulation();
             iterations = getIterations();
-            try {
-                create(agentsCount);
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
-            }
+            create(agentsCount);
         }
-        for (int i = 1; i < 16; i++) {
+        for (int i = 1; i <= 15; i++) {
             if ((i + "").equals(e.getActionCommand())) {
-                try {
-                    paintAgents(agentsHistory[i - 1]);
-                } catch (IOException ioException) {
-                    ioException.printStackTrace();
-                }
+                habitat.setIcon(new ImageIcon(paintAgents(agentsHistory[i - 1])));
             }
         }
 

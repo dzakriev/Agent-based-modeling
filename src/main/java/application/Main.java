@@ -5,8 +5,6 @@ import application.eventdriven.EventDrivenPanel;
 import application.eventdriven.EventModel;
 import application.simulation.DynamicSimulationPanel;
 
-import java.io.IOException;
-
 public class Main {
     private static AgentBasedPanel agentBasedPanel;
     private static DynamicSimulationPanel dynamicSimulationPanel;
@@ -18,11 +16,7 @@ public class Main {
             e.printStackTrace();
         }
         dynamicSimulationPanel = new DynamicSimulationPanel();
-        try {
-            agentBasedPanel = new AgentBasedPanel();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        agentBasedPanel = new AgentBasedPanel();
     }
 
     public static void main(String[] args) {

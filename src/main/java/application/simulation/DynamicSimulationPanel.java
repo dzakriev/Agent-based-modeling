@@ -14,28 +14,21 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 
 public class DynamicSimulationPanel extends JPanel implements ActionListener {
-    private JButton button1;
-    private JTextField input1;
-    private JTextField input2;
-    private JTextField input3;
-    private JTextField input4;
-    private JTextField input5;
-    private JLabel label1;
-    private JLabel label2;
-    private JLabel label3;
-    private JLabel label4;
-    private JLabel label5;
-    private JScrollPane table;
-    private JTextArea tableText;
-    private JLabel graph;
+    private final JTextField input1;
+    private final JTextField input2;
+    private final JTextField input3;
+    private final JTextField input4;
+    private final JTextField input5;
+    private final JTextArea tableText;
+    private final JLabel graph;
     private DynamicModel model = new DynamicModel(10000, 0.6, 1.25, 10, 15);
 
     public DynamicSimulationPanel() {
-        label1 = new JLabel("Population");
-        label2 = new JLabel("Infectious");
-        label3 = new JLabel("Contact Rate");
-        label4 = new JLabel("Average Incubation Time");
-        label5 = new JLabel("Average Illness Duration");
+        JLabel label1 = new JLabel("Population");
+        JLabel label2 = new JLabel("Infectious");
+        JLabel label3 = new JLabel("Contact Rate");
+        JLabel label4 = new JLabel("Average Incubation Time");
+        JLabel label5 = new JLabel("Average Illness Duration");
 
         input1 = new JTextField("10000", 5);
         input2 = new JTextField("0.6", 5);
@@ -49,7 +42,7 @@ public class DynamicSimulationPanel extends JPanel implements ActionListener {
         input4.setMaximumSize(new Dimension(70, 26));
         input5.setMaximumSize(new Dimension(70, 26));
 
-        button1 = new JButton("Start");
+        JButton button1 = new JButton("Start");
         button1.addActionListener(this);
         button1.setMaximumSize(new Dimension(50, 26));
 
@@ -57,7 +50,7 @@ public class DynamicSimulationPanel extends JPanel implements ActionListener {
 
         tableText = new JTextArea("hey");
         tableText.setEditable(false);
-        table = new JScrollPane(tableText);
+        JScrollPane table = new JScrollPane(tableText);
         table.setVisible(true);
         table.setMaximumSize(new Dimension(500,450));
 
