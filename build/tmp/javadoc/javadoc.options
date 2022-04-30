@@ -1,0 +1,15 @@
+-classpath 'D:\\Program Files\\JavaProjects\\Agent-based-modeling\\build\\classes\\java\\main;D:\\Program Files\\JavaProjects\\Agent-based-modeling\\build\\resources\\main;C:\\Users\\dzakr\\.gradle\\caches\\modules-2\\files-2.1\\org.jfree\\jfreechart\\1.5.3\\26c6d7143d8a905a54c7e2296cea6ce4c5ecb417\\jfreechart-1.5.3.jar'
+-d 'D:\\Program Files\\JavaProjects\\Agent-based-modeling\\build\\docs\\javadoc'
+-doctitle 'Application.Agent-based-modeling 1.0-SNAPSHOT API'
+-notimestamp 
+-quiet 
+-windowtitle 'Application.Agent-based-modeling 1.0-SNAPSHOT API'
+'D:\\Program Files\\JavaProjects\\Agent-based-modeling\\src\\main\\java\\application\\agent\\Agent.java'
+'D:\\Program Files\\JavaProjects\\Agent-based-modeling\\src\\main\\java\\application\\agent\\AgentBasedPanel.java'
+'D:\\Program Files\\JavaProjects\\Agent-based-modeling\\src\\main\\java\\application\\eventdriven\\AnimatedPanel.java'
+'D:\\Program Files\\JavaProjects\\Agent-based-modeling\\src\\main\\java\\application\\eventdriven\\EventDrivenPanel.java'
+'D:\\Program Files\\JavaProjects\\Agent-based-modeling\\src\\main\\java\\application\\eventdriven\\EventModel.java'
+'D:\\Program Files\\JavaProjects\\Agent-based-modeling\\src\\main\\java\\application\\GUI.java'
+'D:\\Program Files\\JavaProjects\\Agent-based-modeling\\src\\main\\java\\application\\Main.java'
+'D:\\Program Files\\JavaProjects\\Agent-based-modeling\\src\\main\\java\\application\\simulation\\DynamicModel.java'
+'D:\\Program Files\\JavaProjects\\Agent-based-modeling\\src\\main\\java\\application\\simulation\\DynamicSimulationPanel.java'

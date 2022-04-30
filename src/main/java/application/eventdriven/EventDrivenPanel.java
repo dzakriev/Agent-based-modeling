@@ -12,6 +12,7 @@ public class EventDrivenPanel extends JPanel implements ActionListener, Runnable
     private final JLabel canvas;
     private EventModel model;
     private final JTextField iterations;
+    private final JLabel iterationsLabel;
     private Thread thread = new Thread(this);
 
     //Integer.parseInt(iterations.getText())
@@ -21,8 +22,9 @@ public class EventDrivenPanel extends JPanel implements ActionListener, Runnable
         startButton.addActionListener(this);
         stopButton.addActionListener(this);
         stopButton.setEnabled(false);
+        iterationsLabel = new JLabel("Iterations count");
         iterations = new JTextField("10");
-        iterations.setMaximumSize(new Dimension(20, 20));
+        iterations.setMaximumSize(new Dimension(120, 20));
         model = new EventModel();
         canvas = new JLabel();
         canvas.setIcon(new ImageIcon(drawBlank()));
@@ -32,31 +34,32 @@ public class EventDrivenPanel extends JPanel implements ActionListener, Runnable
         this.setLayout(layout);
         layout.setAutoCreateGaps(true);
         layout.setAutoCreateContainerGaps(true);
-        layout.setHorizontalGroup(layout.createParallelGroup()
+        layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
                 .addComponent(canvas)
+                .addComponent(iterationsLabel)
                 .addComponent(iterations)
-                .addComponent(startButton)
-                .addComponent(stopButton)
+                .addGroup(layout.createSequentialGroup()
+                        .addComponent(startButton)
+                        .addComponent(stopButton)
+                )
         );
         layout.setVerticalGroup(layout.createSequentialGroup()
                 .addGap(100)
                 .addComponent(canvas)
+                .addComponent(iterationsLabel)
                 .addComponent(iterations)
-                .addComponent(startButton)
-                .addComponent(stopButton)
+                .addGroup(layout.createParallelGroup()
+                        .addComponent(startButton)
+                        .addComponent(stopButton)
+                )
         );
 
     }
 
+    /**
+     * Animates model in a different thread.
+     */
     public void animateCanvas(String input) throws InterruptedException {
-        /*
-        exit
-        addRight
-        addLeft
-        onBoard
-        toRight
-        toLeft
-         */
         String[] commands = input.split("\n");
         BufferedImage image;
         Graphics g;

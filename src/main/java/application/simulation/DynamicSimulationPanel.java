@@ -3,6 +3,7 @@ package application.simulation;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.CategoryAxis;
+import org.jfree.chart.axis.CategoryLabelPositions;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
@@ -52,7 +53,7 @@ public class DynamicSimulationPanel extends JPanel implements ActionListener {
         tableText.setEditable(false);
         JScrollPane table = new JScrollPane(tableText);
         table.setVisible(true);
-        table.setMaximumSize(new Dimension(500,450));
+        table.setMaximumSize(new Dimension(500, 450));
 
         refresh();
 
@@ -108,18 +109,21 @@ public class DynamicSimulationPanel extends JPanel implements ActionListener {
     private BufferedImage createChart() {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         for (int i = 0; i < model.getHistoryLength(); i++) {
-            dataset.addValue(model.getHistory()[i][0], "Healthy", i / (model.getHistoryLength() / 53 + 1) + 1 + "");
-            dataset.addValue(model.getHistory()[i][1], "Exposed", i / (model.getHistoryLength() / 53 + 1) + 1 + "");
-            dataset.addValue(model.getHistory()[i][2], "Sick", i / (model.getHistoryLength() / 53 + 1) + 1 + "");
-            dataset.addValue(model.getHistory()[i][3], "Recovered", i / (model.getHistoryLength() / 53 + 1) + 1 + "");
+            dataset.addValue(model.getHistory()[i][0], "Healthy", i + 1 + "");
+            dataset.addValue(model.getHistory()[i][1], "Exposed", i + 1 + "");
+            dataset.addValue(model.getHistory()[i][2], "Sick", i + 1 + "");
+            dataset.addValue(model.getHistory()[i][3], "Recovered", i + 1 + "");
         }
         JFreeChart lineChart = ChartFactory.createLineChart("Population", "Days", "Count",
                 dataset, PlotOrientation.VERTICAL, true, true, false);
+
         CategoryPlot plot = lineChart.getCategoryPlot();
-        lineChart.getPlot().setBackgroundPaint(Color.WHITE);
-        CategoryAxis domainAxis = plot.getDomainAxis();
-        domainAxis.setLowerMargin(0);
-        domainAxis.setUpperMargin(0);
+        if (dataset.getColumnCount() > 53) {
+            plot.getDomainAxis().setVisible(false);
+        }
+        plot.setBackgroundPaint(Color.WHITE);
+        plot.getDomainAxis().setLowerMargin(0);
+        plot.getDomainAxis().setUpperMargin(0);
         plot.getRenderer().setSeriesPaint(0, Color.GREEN);
         plot.getRenderer().setSeriesPaint(1, Color.GRAY);
         plot.getRenderer().setSeriesPaint(2, Color.RED);

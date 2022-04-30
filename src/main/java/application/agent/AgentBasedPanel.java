@@ -11,21 +11,20 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.util.Arrays;
 import java.util.Objects;
 
 
 public class AgentBasedPanel extends JPanel implements ActionListener {
-    private final JButton button1;
-    private final JButton[] buttons;
-    private final JTextField input1;//Максимальная популяция - 10000
-    private final JTextField input2; //Максимум итераций - 15
-    private final JComboBox comboBox1;
-    private final JComboBox comboBox2;
+    private final JButton createButton;
+    private final JButton[] historyButtons;
+    private final JTextField agentsCountInput;//Максимальная популяция - 10000
+    private final JTextField iterationsCountInput; //Максимум итераций - 15
+    private final JComboBox activeColorComboBox;
+    private final JComboBox inactiveColorComboBox;
     private final JLabel habitat;
     private final JLabel graph;
     private Agent[] agents;
-    private Agent[][] agentsHistory;
+    private final Agent[][] agentsHistory;
     private int agentsCount;
     private int iterations;
     private int[] activeData;
@@ -40,22 +39,22 @@ public class AgentBasedPanel extends JPanel implements ActionListener {
                 "Yellow",
                 "Blue"
         };
-        comboBox1 = new JComboBox(colors);
-        comboBox2 = new JComboBox(colors);
-        comboBox2.setSelectedIndex(1);
-        comboBox1.setMaximumSize(new Dimension(70, 20));
-        comboBox2.setMaximumSize(new Dimension(70, 20));
+        activeColorComboBox = new JComboBox(colors);
+        inactiveColorComboBox = new JComboBox(colors);
+        inactiveColorComboBox.setSelectedIndex(1);
+        activeColorComboBox.setMaximumSize(new Dimension(70, 20));
+        inactiveColorComboBox.setMaximumSize(new Dimension(70, 20));
 
-        button1 = new JButton("Create");
-        button1.addActionListener(this);
-        button1.setMaximumSize(new Dimension(50, 26));
+        createButton = new JButton("Create");
+        createButton.addActionListener(this);
+        createButton.setMaximumSize(new Dimension(50, 26));
 
-        input1 = new JTextField("0", 5);
-        input2 = new JTextField("0", 5);
-        input1.setMaximumSize(new Dimension(70, 26));
-        input2.setMaximumSize(new Dimension(70, 26));
-        input1.setMinimumSize(new Dimension(70, 26));
-        input2.setMinimumSize(new Dimension(70, 26));
+        agentsCountInput = new JTextField("0", 5);
+        iterationsCountInput = new JTextField("0", 5);
+        agentsCountInput.setMaximumSize(new Dimension(70, 26));
+        iterationsCountInput.setMaximumSize(new Dimension(70, 26));
+        agentsCountInput.setMinimumSize(new Dimension(70, 26));
+        iterationsCountInput.setMinimumSize(new Dimension(70, 26));
 
         this.agents = agents;
         agentsCount = getPopulation();
@@ -79,13 +78,13 @@ public class AgentBasedPanel extends JPanel implements ActionListener {
         graph = new JLabel();
         graph.setIcon(new ImageIcon(createChart()));
 
-        buttons = new JButton[15];
+        historyButtons = new JButton[15];
         JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT)); //Чтобы сделать кнопки по центру, необходимо убрать FlowLayout
         for (int i = 0; i < 15; i++) {
-            buttons[i] = new JButton(i + 1 + "");
-            buttonsPanel.add(buttons[i]);
-            buttons[i].addActionListener(this);
-            if (i > iterations - 1) buttons[i].setVisible(false);
+            historyButtons[i] = new JButton(i + 1 + "");
+            buttonsPanel.add(historyButtons[i]);
+            historyButtons[i].addActionListener(this);
+            if (i > iterations - 1) historyButtons[i].setVisible(false);
         }
 
         GroupLayout layout = new GroupLayout(this);
@@ -99,16 +98,16 @@ public class AgentBasedPanel extends JPanel implements ActionListener {
         JLabel habitatLabel = new JLabel("Habitat");
         layout.setHorizontalGroup
                 (layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup()
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
                                 .addGroup(layout.createSequentialGroup()
                                         .addComponent(input1Label)
                                         .addGap(30)
                                         .addComponent(input2Label)
                                 )
                                 .addGroup(layout.createSequentialGroup()
-                                        .addComponent(input1)
+                                        .addComponent(agentsCountInput)
                                         .addGap(20)
-                                        .addComponent(input2)
+                                        .addComponent(iterationsCountInput)
                                 )
                                 .addGroup(layout.createSequentialGroup()
                                         .addComponent(comboBox1Label)
@@ -116,20 +115,16 @@ public class AgentBasedPanel extends JPanel implements ActionListener {
                                         .addComponent(comboBox2Label)
                                 )
                                 .addGroup(layout.createSequentialGroup()
-                                        .addComponent(comboBox1)
+                                        .addComponent(activeColorComboBox)
                                         .addGap(20)
-                                        .addComponent(comboBox2)
+                                        .addComponent(inactiveColorComboBox)
                                 )
                                 .addGroup(layout.createSequentialGroup()
-                                        .addGap(45)
-                                        .addComponent(button1)
+                                        .addComponent(createButton)
                                 )
                         )
-                        .addGroup(layout.createParallelGroup()
-                                .addGroup(layout.createSequentialGroup()
-                                        .addGap(240)
-                                        .addComponent(habitatLabel)
-                                )
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                                .addComponent(habitatLabel)
                                 .addComponent(habitat)
                         )
                         .addGroup(layout.createParallelGroup()
@@ -146,20 +141,20 @@ public class AgentBasedPanel extends JPanel implements ActionListener {
                                         .addComponent(input2Label)
                                 )
                                 .addGroup(layout.createParallelGroup()
-                                        .addComponent(input1)
-                                        .addComponent(input2)
+                                        .addComponent(agentsCountInput)
+                                        .addComponent(iterationsCountInput)
                                 )
                                 .addGroup(layout.createParallelGroup()
                                         .addComponent(comboBox1Label)
                                         .addComponent(comboBox2Label)
                                 )
                                 .addGroup(layout.createParallelGroup()
-                                        .addComponent(comboBox1)
-                                        .addComponent(comboBox2)
+                                        .addComponent(activeColorComboBox)
+                                        .addComponent(inactiveColorComboBox)
                                 )
                                 .addGroup(layout.createSequentialGroup()
                                         .addGap(20)
-                                        .addComponent(button1)
+                                        .addComponent(createButton)
                                 )
                         )
                         .addGroup(layout.createSequentialGroup()
@@ -172,13 +167,14 @@ public class AgentBasedPanel extends JPanel implements ActionListener {
                                 .addComponent(buttonsPanel)
                         )
                 );
-        input1.setText("100");
-        input2.setText("10");
+        agentsCountInput.setText("100");
+        iterationsCountInput.setText("10");
     }
 
     public AgentBasedPanel() {
         this((initializeAgents(0)));
     }
+
     /**
      * Static method for initializing object with no arguments.
      */
@@ -198,7 +194,7 @@ public class AgentBasedPanel extends JPanel implements ActionListener {
         BufferedImage habitat = new BufferedImage(521, 521, 1);
         Graphics g = habitat.getGraphics();
         g.setColor(Color.WHITE);
-        g.fillRect(0,0,521,521);
+        g.fillRect(0, 0, 521, 521);
         updateColors();
         for (int i = 0; i < agentsCount; i++) {
             if (agents[i].isUser) {
@@ -220,13 +216,13 @@ public class AgentBasedPanel extends JPanel implements ActionListener {
      * Gets values from comboBoxes and sets them as colors for agents.
      */
     private void updateColors() {
-        switch ((String) (Objects.requireNonNull(comboBox1.getSelectedItem()))) {
+        switch ((String) (Objects.requireNonNull(activeColorComboBox.getSelectedItem()))) {
             case ("Red") -> activeColor = Color.RED;
             case ("Blue") -> activeColor = Color.BLUE;
             case ("Yellow") -> activeColor = Color.YELLOW;
             default -> activeColor = Color.GREEN;
         }
-        switch ((String) (Objects.requireNonNull(comboBox2.getSelectedItem()))) {
+        switch ((String) (Objects.requireNonNull(inactiveColorComboBox.getSelectedItem()))) {
             case ("Green") -> inactiveColor = Color.GREEN;
             case ("Blue") -> inactiveColor = Color.BLUE;
             case ("Yellow") -> inactiveColor = Color.YELLOW;
@@ -248,6 +244,7 @@ public class AgentBasedPanel extends JPanel implements ActionListener {
         JFreeChart barChart = ChartFactory.createBarChart("Population", "Days", "Count",
                 dataset, PlotOrientation.VERTICAL, true, true, false);
         CategoryPlot plot = barChart.getCategoryPlot();
+        plot.setBackgroundPaint(Color.WHITE);
         plot.getRenderer().setSeriesPaint(0, inactiveColor);
         plot.getRenderer().setSeriesPaint(1, activeColor);
         return barChart.createBufferedImage(650, 400);
@@ -258,26 +255,31 @@ public class AgentBasedPanel extends JPanel implements ActionListener {
         this.inactiveData = inactiveData;
     }
 
+    /**
+     * Parses agents count text field value, sets maximum at 10000 and minimum at 0
+     */
     public int getPopulation() { //Возвращает значение из текстового окошка
-        if (Integer.parseInt(input1.getText()) > 10000) {
-            input1.setText("10000");
+        if (Integer.parseInt(agentsCountInput.getText()) > 10000) {
+            agentsCountInput.setText("10000");
         }
-        if (Integer.parseInt(input1.getText()) < 1) {
-            input1.setText("0");
+        if (Integer.parseInt(agentsCountInput.getText()) < 1) {
+            agentsCountInput.setText("0");
         }
-        return Integer.parseInt(input1.getText());
+        return Integer.parseInt(agentsCountInput.getText());
     }
 
+    /**
+     * Parses iterations text field value, sets maximum at 15 and minimum at 1
+     */
     public int getIterations() { //Возвращает значение из текстового окошка
-        if (Integer.parseInt(input2.getText()) > 15) {
-            input2.setText("15");
+        if (Integer.parseInt(iterationsCountInput.getText()) > 15) {
+            iterationsCountInput.setText("15");
         }
-        if (Integer.parseInt(input2.getText()) < 1) {
-            input2.setText("0");
+        if (Integer.parseInt(iterationsCountInput.getText()) < 1) {
+            iterationsCountInput.setText("0");
         }
-        return Integer.parseInt(input2.getText());
+        return Integer.parseInt(iterationsCountInput.getText());
     }
-
 
 
     public int getActiveAgents() {
@@ -330,7 +332,7 @@ public class AgentBasedPanel extends JPanel implements ActionListener {
         cycle();
         paintComponent();
         for (int i = 0; i < 15; i++) {
-            buttons[i].setVisible(i <= iterations - 1);
+            historyButtons[i].setVisible(i <= iterations - 1);
         }
         setVisible(true);
     }
