@@ -1,1 +1,1 @@
-MA7
+Application for modeling agent-based systems.
