@@ -3,6 +3,7 @@ package application;
 import application.agent.AgentBasedPanel;
 import application.eventdriven.EventDrivenPanel;
 import application.simulation.DynamicSimulationPanel;
+
 import javax.swing.*;
 import javax.swing.JFrame;
 
