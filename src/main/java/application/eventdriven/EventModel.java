@@ -14,15 +14,6 @@ public class EventModel {
     private int iterations;
     private final List<Integer> history;
 
-    public int getRaftCount() {
-        return raftCount;
-    }
-
-    public String whereIsRaft() {
-        if (isLeft) return ("left");
-        else if (isRight) return ("right");
-        else return ("sea");
-    }
 
     public List<Integer> getHistory() {
         return history;
@@ -35,7 +26,7 @@ public class EventModel {
         iterations = 0;
         isRight = true;
         isLeft = false;
-        history = new ArrayList<Integer>();
+        history = new ArrayList<>();
     }
 
     public void toRight() {

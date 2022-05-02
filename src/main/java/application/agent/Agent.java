@@ -7,13 +7,12 @@ import java.util.Random;
 import static java.lang.StrictMath.abs;
 
 public class Agent {
-    public static final List<Agent> connections = new ArrayList<Agent>();
-    public Agent next = null;
-    int x;
-    int y;
-    int daysLeft;
+    public static final List<Agent> connections = new ArrayList<>();
+    private int x;
+    private int y;
+    private int daysLeft;
     private final Random rand = new Random();
-    boolean isUser;
+    private boolean isUser;
 
     public Agent() {
         x = rand.nextInt() % 256;
@@ -25,11 +24,6 @@ public class Agent {
 
     public static void clearConnection() {
         connections.clear();
-    }
-
-    public void setUser() {
-        isUser = true;
-        daysLeft = abs(rand.nextInt()) % 5 + 1;
     }
 
     public void update() {
@@ -48,12 +42,30 @@ public class Agent {
         }
     }
 
-    public Agent copy(){
+    public Agent copy() {
         Agent temp_agent = new Agent();
         temp_agent.x = x;
         temp_agent.y = y;
         temp_agent.isUser = isUser;
         temp_agent.daysLeft = daysLeft;
+        connections.remove(temp_agent);
         return temp_agent;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public boolean isUser() {
+        return isUser;
+    }
+
+    public void setUser() {
+        isUser = true;
+        daysLeft = abs(rand.nextInt()) % 5 + 1;
     }
 }

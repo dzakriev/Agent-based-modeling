@@ -6,22 +6,18 @@ import application.eventdriven.EventModel;
 import application.simulation.DynamicSimulationPanel;
 
 public class Main {
-    private static AgentBasedPanel agentBasedPanel;
-    private static DynamicSimulationPanel dynamicSimulationPanel;
-    private static EventDrivenPanel eventDrivenPanel;
+    private static final AgentBasedPanel agentBasedPanel;
+    private static final DynamicSimulationPanel dynamicSimulationPanel;
+    private static final EventDrivenPanel eventDrivenPanel;
+
     static {
-        try {
-            eventDrivenPanel = new EventDrivenPanel();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        eventDrivenPanel = new EventDrivenPanel();
         dynamicSimulationPanel = new DynamicSimulationPanel();
         agentBasedPanel = new AgentBasedPanel();
     }
 
     public static void main(String[] args) {
-        GUI gui = new GUI(agentBasedPanel, dynamicSimulationPanel, eventDrivenPanel);
+        new GUI(agentBasedPanel, dynamicSimulationPanel, eventDrivenPanel);
         EventModel model = new EventModel();
-        System.out.println(model.Cycle(5));
     }
 }
