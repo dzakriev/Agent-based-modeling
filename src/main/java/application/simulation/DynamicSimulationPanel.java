@@ -115,10 +115,10 @@ public class DynamicSimulationPanel extends JPanel implements ActionListener {
     private BufferedImage createChart() {
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         for (int i = 0; i < model.getHistoryLength(); i++) {
-            dataset.addValue(model.getHistory()[i][0], "Healthy", i / (model.getHistoryLength() / 53 + 1) + 1 + "");
-            dataset.addValue(model.getHistory()[i][1], "Exposed", i / (model.getHistoryLength() / 53 + 1) + 1 + "");
-            dataset.addValue(model.getHistory()[i][2], "Sick", i / (model.getHistoryLength() / 53 + 1) + 1 + "");
-            dataset.addValue(model.getHistory()[i][3], "Recovered", i / (model.getHistoryLength() / 53 + 1) + 1 + "");
+            dataset.addValue(model.getHistory()[i][0], "Healthy", i + 1 + "");
+            dataset.addValue(model.getHistory()[i][1], "Exposed", i + 1 + "");
+            dataset.addValue(model.getHistory()[i][2], "Sick", i + 1 + "");
+            dataset.addValue(model.getHistory()[i][3], "Recovered", i + 1 + "");
         }
         JFreeChart lineChart = ChartFactory.createLineChart("Population", "Days", "Count",
                 dataset, PlotOrientation.VERTICAL, true, true, false);

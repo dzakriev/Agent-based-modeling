@@ -1,0 +1,12 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Application.Agent-based-modeling.main:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Application_Agent_based_modeling_main_jar</output-path>
+    <root id="archive" name="Application.Agent-based-modeling.main.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="module-output" name="Application.Agent-based-modeling.main" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jfree/jfreechart/1.5.3/26c6d7143d8a905a54c7e2296cea6ce4c5ecb417/jfreechart-1.5.3.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
